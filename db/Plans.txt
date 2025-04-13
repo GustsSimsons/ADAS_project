@@ -1,0 +1,16 @@
+db.serialize(() => {
+    db.run(`
+      CREATE TABLE IF NOT EXISTS plans (
+        plan_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        description TEXT NOT NULL,
+        comments TEXT
+      )
+    `);
+  
+    db.run(`
+      INSERT INTO plans (description, comments)
+      VALUES 
+        ('Implement new login system', 'Needs to be secure and simple.'),
+        ('Refactor task assignment logic', 'Aim for better performance and cleaner structure.')
+    `);
+  });

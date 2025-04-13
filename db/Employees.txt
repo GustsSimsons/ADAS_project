@@ -1,0 +1,29 @@
+db.serialize(() => {
+  // Create the employees table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS employees (
+      employee_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      status TEXT CHECK(status IN ('low', 'mid', 'high')) NOT NULL,
+      first_name TEXT NOT NULL,
+      last_name TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      hired_date DATE NOT NULL
+    )
+  `);
+
+  // Insert employees data
+  const insertStmt = `
+    INSERT INTO employees (status, first_name, last_name, email, hired_date)
+    VALUES
+      ('low', 'Leon', 'Lower', 'leon_lower@gmail.com', '2025-03-03'),
+      ('mid', 'Mike', 'Mider', 'mike_mider@gmail.com', '2025-02-02'),
+      ('high', 'Harry', 'Higher', 'harry_higher@gmail.com', '2025-01-01')
+  `;
+  db.run(insertStmt, function (err) {
+    if (err) {
+      console.error('Error inserting data: ', err);
+    } else {
+      console.log('Inserted employee data successfully!');
+    }
+  });
+});

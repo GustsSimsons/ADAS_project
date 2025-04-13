@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --black-col: #222831;
+    --grey-col: #393E46;
+    --teal-col: #00ADB5;
+    --white-col: #EEEEEE;
+  }
+  
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    background-color: var(--grey-col);
+    color: var(--white-col);
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--grey-col);
+}
+
+input, select, option {
+    padding: 8px;
+    background-color: var(--white-col);
+    border-radius: 8px;
+    border: 2px solid var(--black-col);
+    color: var(--black-col);
+}
+
+textarea {
+    padding: 8px;
+    background-color: var(--white-col);
+    border-radius: 8px;
+    border: 2px solid var(--black-col);
+    color: var(--black-col);
+}
+
+
+button {
+    background-color: var(--white-col);
+    color: var(--black-col);
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid var(--black-col);
+    transition: 0.1s ease-in-out;
+}
+
+button:hover {
+    color: var(--white-col);
+    background-color: var(--grey-col);
+    cursor: pointer;
+    border: 1px solid var(--white-col);
+}

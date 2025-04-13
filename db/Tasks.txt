@@ -1,0 +1,20 @@
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS tasks (
+      task_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      plan_id INTEGER,
+      description TEXT NOT NULL,
+      deadline TEXT, -- Format: YYYY-MM-DD
+      priority TEXT CHECK(priority IN ('weak', 'average', 'strong')),
+      CS_comments TEXT,
+      CTO_comments TEXT,
+      FOREIGN KEY (plan_id) REFERENCES plans(plan_id)
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating tasks table:', err.message);
+    } else {
+      console.log('✅ tasks table created or already exists');
+    }
+  });
+});

@@ -1,0 +1,107 @@
+body {
+    display: none;
+}
+
+
+body {
+    justify-content: center;
+    align-items: center;
+}
+
+#container {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    align-items: space-evenly;
+    border: 3px solid var(--white-col);
+    padding: 40px 50px 20px 0px;
+    border-radius: 8px;
+}
+
+#low, #mid, #high {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+
+
+select, option {
+    width: 246px;
+}
+
+input, textarea {
+    width: 60%;
+    max-width: 60%;
+}
+textarea {
+    height: 120px;
+    min-height: 23px;
+    max-height: 200px;
+    min-width: 60%;
+}
+
+
+
+
+#low > div,
+#mid > div,
+#high > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-left: 15px;
+}
+
+
+#right_section {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+#left_section {
+    width: 80%;
+}
+
+h1 {
+    position: fixed;
+    left: 130px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+    width: 50px;
+    opacity: 0;
+    animation: slideInLeft 1s ease-out forwards;
+}
+
+/* Animation keyframes */
+@keyframes slideInLeft {
+    0% {
+        transform: translate(-200px, -50%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(-50%);
+        opacity: 1;
+    }
+}
+
+
+#logout-btn {
+    top: 10px;           /* 10px from the top of the body */
+    right: 10px;         /* 10px from the right of the body */
+    position: absolute;
+}
+
+#back-btn {
+    top: 10px;
+    right: 100px;
+    position: absolute;
+}
+
+

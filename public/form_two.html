@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form_two</title>
+    <link rel="stylesheet" href="form_two.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Uzdevumu pārvaldības forma</h1>
+    <input type="hidden" id="petition-id">
+    <button id="logout-btn">Log Out</button>
+    <button id="back-btn">Go Back</button>
+    <div id="container">
+        <div id="left_section">
+            <div id="low">
+                <div><label for="low1">Employee ID</label><input type="number" id="low1"></div>
+                <div><label for="low2">Plan ID</label><input type="number" id="low2"></div>
+                <div><label for="low3">Task Description</label><input type="text" id="low3"></div>
+                <div><label for="low4">Task Priority</label>
+                    <select id="low4" required>
+                      <option value="weak">Weak</option>
+                      <option value="average">Average</option>
+                      <option value="strong">Strong</option>
+                    </select>
+                  </div>
+                <div><label for="low5">Task Deadline</label><input type="date" id="low5"></div>
+            </div>
+            <div id="mid">
+                <div><label for="mid1">CS Comments</label><textarea id="mid1" name="comments" rows="1" placeholder="Type your comment..."></textarea></div>
+            </div>
+            <div id="high">
+                <div><label for="high1">CTO Comments</label><textarea id="high1" name="comments" rows="1" placeholder="Type your comment..."></textarea></div>
+            </div>
+        </div>
+        <div id="right_section">
+            <button id="send-petition-btn">Send Petition</button>
+            <button id="get-petition-btn">Get petition</button>
+            <button id="approve-task-btn">Approve Task</button>
+        </div>
+    </div>
+    
+    <script src="form_two.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+// Create Task_assignment table
+db.serialize(() => {
+    db.run(`
+      CREATE TABLE IF NOT EXISTS Task_assignment (
+        task_id INTEGER,
+        employee_id INTEGER,
+        assigned_date TEXT,
+        PRIMARY KEY (task_id, employee_id),
+        FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+        FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+      )
+    `, (err) => {
+      if (err) {
+        console.error('Error creating Task_assignment table:', err.message);
+      } else {
+        console.log('✅ Task_assignment table created or already exists');
+      }
+    });
+  });

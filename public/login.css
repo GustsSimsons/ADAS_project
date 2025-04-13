@@ -1,0 +1,42 @@
+
+body {
+    display: none;
+}
+
+body, div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    align-self: flex-start;
+    background-color: var(--black-col);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    background-color: var(--black-col);
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+button {
+    margin-top: 10px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    background-color: var(--black-col);
+}
+
+div {
+    display: flex;
+    background-color: var(--black-col);
+    padding: 20px;
+    border-radius: 8px;
+}
