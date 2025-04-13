@@ -1,4 +1,4 @@
-// Create Task_assignment table
+
 db.serialize(() => {
     db.run(`
       CREATE TABLE IF NOT EXISTS Task_assignment (
@@ -13,7 +13,7 @@ db.serialize(() => {
       if (err) {
         console.error('Error creating Task_assignment table:', err.message);
       } else {
-        console.log('✅ Task_assignment table created or already exists');
+        console.log('Task_assignment table created or already exists');
       }
     });
   });

@@ -1,4 +1,3 @@
-// Create petition table for unapproved tasks
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS petition (
@@ -7,7 +6,7 @@ db.serialize(() => {
       plan_id INTEGER,
       task_description TEXT NOT NULL,
       task_priority TEXT CHECK(task_priority IN ('weak', 'average', 'strong')),
-      task_deadline TEXT, -- Format: YYYY-MM-DD
+      task_deadline TEXT,
       CS_comments TEXT,
       CTO_comments TEXT,
       FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
@@ -17,7 +16,7 @@ db.serialize(() => {
     if (err) {
       console.error('Error creating petition table:', err.message);
     } else {
-      console.log('✅ Petition table created or already exists');
+      console.log('Petition table created or already exists');
     }
   });
 });

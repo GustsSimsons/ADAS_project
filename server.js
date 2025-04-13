@@ -1,30 +1,128 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const db = require('./db/database');
 const app = express();
 const PORT = 3000;
-const db = require('./db/database');
+
+const upload = multer({ storage: multer.memoryStorage() });
+const FINANSE_PATH = path.join(__dirname, 'Finanse');
 
 
-// Middleware to handle JSON and serve static files
 app.use(bodyParser.json());
 app.use(express.static('public'));
-
-// Session middleware
 app.use(session({
   secret: 'very-safe-very-good',
   resave: false,
   saveUninitialized: true,
   cookie: {
     secure: false,
-    maxAge: 1000 * 60 * 60, 
+    maxAge: 1000 * 60 * 60,
   },
 }));
 
 
+app.post('/upload-budget', upload.single('budget'), (req, res) => {
+    const budgetId = req.body.budgetId;
+
+    if (!req.file || !budgetId) {
+        return res.status(400).send('Missing file or budget ID.');
+    }
+
+    const draftFolderName = `Draft${budgetId}`;
+    const draftFolderPath = path.join(FINANSE_PATH, draftFolderName);
+    const budgetFilename = `budget${budgetId}.xlsx`;
+    const budgetFilePath = path.join(draftFolderPath, budgetFilename);
+
+    if (!fs.existsSync(FINANSE_PATH)) {
+        fs.mkdirSync(FINANSE_PATH);
+    }
+
+    if (!fs.existsSync(draftFolderPath)) {
+        fs.mkdirSync(draftFolderPath);
+    }
+
+    const existingFiles = fs.readdirSync(draftFolderPath);
+    existingFiles.forEach(file => {
+        if (file.startsWith('budget')) {
+            fs.unlinkSync(path.join(draftFolderPath, file));
+        }
+    });
+
+    fs.writeFileSync(budgetFilePath, req.file.buffer);
+
+    res.send(`Budget uploaded to ${draftFolderName}/${budgetFilename}`);
+});
+
+app.post('/upload-analysis', upload.single('analysis'), (req, res) => {
+  const budgetId = req.body.budgetId;
+
+  if (!req.file || !budgetId) {
+      return res.status(400).send('Missing file or budget ID.');
+  }
+
+  const draftFolderName = `Draft${budgetId}`;
+  const draftFolderPath = path.join(FINANSE_PATH, draftFolderName);
+  const analysisFilename = `analysis${budgetId}.xlsx`;
+  const analysisFilePath = path.join(draftFolderPath, analysisFilename);
+
+  if (!fs.existsSync(FINANSE_PATH)) {
+      fs.mkdirSync(FINANSE_PATH);
+  }
+
+  if (!fs.existsSync(draftFolderPath)) {
+      fs.mkdirSync(draftFolderPath);
+  }
+
+  const existingFiles = fs.readdirSync(draftFolderPath);
+  existingFiles.forEach(file => {
+      if (file.startsWith('analysis')) {
+          fs.unlinkSync(path.join(draftFolderPath, file));
+      }
+  });
+
+  fs.writeFileSync(analysisFilePath, req.file.buffer);
+
+  res.send(`Analysis uploaded to ${draftFolderName}/${analysisFilename}`);
+});
+
+app.post('/submit-feedback', (req, res) => {
+  const { feedback, budgetId } = req.body;
+
+  if (!feedback || !budgetId) {
+      return res.status(400).send('Missing feedback or budget ID.');
+  }
+
+  const draftFolderName = `Draft${budgetId}`;
+  const draftFolderPath = path.join(FINANSE_PATH, draftFolderName);
+
+  if (!fs.existsSync(FINANSE_PATH)) {
+      fs.mkdirSync(FINANSE_PATH);
+  }
+
+  if (!fs.existsSync(draftFolderPath)) {
+      fs.mkdirSync(draftFolderPath);
+  }
+
+  let baseFilename = `feedback${budgetId}.txt`;
+  let filePath = path.join(draftFolderPath, baseFilename);
+  let counter = 1;
+
+  while (fs.existsSync(filePath)) {
+      baseFilename = `feedback${budgetId}_${counter}.txt`;
+      filePath = path.join(draftFolderPath, baseFilename);
+      counter++;
+  }
+
+  fs.writeFileSync(filePath, feedback, 'utf-8');
+
+  res.send(`Feedback saved as ${baseFilename}`);
+});
 
 
-// Handle login
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body; // username = first_name, password = last_name
 
@@ -40,7 +138,6 @@ app.post('/api/login', (req, res) => {
     }
 
     if (row) {
-      // Successful login
       req.session.user = {
         id: row.employee_id,
         first_name: row.first_name,
@@ -50,13 +147,11 @@ app.post('/api/login', (req, res) => {
       };
       res.json({ success: true });
     } else {
-      // No match
       res.json({ success: false, message: 'Invalid credentials' });
     }
   });
 });
 
-// Check authentication status
 app.get('/api/check-auth', (req, res) => {
   if (req.session.user) {
     res.json({ loggedIn: true, user: req.session.user });
@@ -65,13 +160,13 @@ app.get('/api/check-auth', (req, res) => {
   }
 });
 
-// Handle logout
+
 app.post('/api/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.json({ success: false, message: 'Error logging out' });
     }
-    res.clearCookie('connect.sid', { path: '/' }); // Explicitly clear the session cookie
+    res.clearCookie('connect.sid', { path: '/' });
     res.json({ success: true });
   });
 });
@@ -79,25 +174,18 @@ app.post('/api/logout', (req, res) => {
 
 
 
-
-
-
-
 app.post('/api/send-petition', (req, res) => {
   const { employee_id, plan_id, task_description, task_priority, task_deadline, CS_comments, CTO_comments } = req.body;
 
-  // Check if the required fields are present
   if (!employee_id || !plan_id || !task_description || !task_deadline || !task_priority) {
     return res.status(400).json({ success: false, message: 'Employee ID, Plan ID, Task Description, Task Deadline, and Task Priority are required.' });
   }
 
-  // Check if the priority is valid
   const validPriorities = ['weak', 'average', 'strong'];
   if (!validPriorities.includes(task_priority)) {
     return res.status(400).json({ success: false, message: 'Task Priority must be one of: weak, average, or strong.' });
   }
 
-  // Insert petition into the petition table
   const stmt = db.prepare(`
     INSERT INTO petition (employee_id, plan_id, task_description, task_priority, task_deadline, CS_comments, CTO_comments)
     VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -123,7 +211,6 @@ app.post('/api/send-petition', (req, res) => {
 
 
 
-// Fetch the first petition or a random petition
 app.get('/api/get-petition', (req, res) => {
   const query = `
     SELECT * FROM petition
@@ -145,12 +232,9 @@ app.get('/api/get-petition', (req, res) => {
 
 
 
-
-// Approve Task: Move data from petition to tasks and Task_assignment
 app.post('/api/approve-task', (req, res) => {
-  const petitionId = req.body.petitionId; // This should be the ID of the petition to approve
+  const petitionId = req.body.petitionId; 
 
-  // Fetch petition details first to use when adding to tasks table
   const petitionQuery = `
     SELECT * FROM petition WHERE petition_id = ?
   `;
@@ -165,7 +249,6 @@ app.post('/api/approve-task', (req, res) => {
       return res.status(404).json({ success: false, message: 'Petition not found' });
     }
 
-    // Insert into tasks table
     const insertTaskQuery = `
       INSERT INTO tasks (plan_id, description, deadline, priority, CS_comments, CTO_comments)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -184,15 +267,14 @@ app.post('/api/approve-task', (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to insert task' });
       }
 
-      const taskId = this.lastID; // Get the ID of the newly inserted task
+      const taskId = this.lastID;
 
-      // Insert into Task_assignment table
       const insertTaskAssignmentQuery = `
         INSERT INTO Task_assignment (task_id, employee_id, assigned_date)
         VALUES (?, ?, ?)
       `;
 
-      const assignedDate = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+      const assignedDate = new Date().toISOString().split('T')[0];
 
       db.run(insertTaskAssignmentQuery, [taskId, petition.employee_id, assignedDate], (err) => {
         if (err) {
@@ -200,7 +282,6 @@ app.post('/api/approve-task', (req, res) => {
           return res.status(500).json({ success: false, message: 'Failed to assign task' });
         }
 
-        // Delete the petition from the petition table
         const deletePetitionQuery = `
           DELETE FROM petition WHERE petition_id = ?
         `;
@@ -217,21 +298,6 @@ app.post('/api/approve-task', (req, res) => {
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

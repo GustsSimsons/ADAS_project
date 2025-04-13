@@ -79,7 +79,7 @@ h1 {
     animation: slideInLeft 1s ease-out forwards;
 }
 
-/* Animation keyframes */
+
 @keyframes slideInLeft {
     0% {
         transform: translate(-200px, -50%);
@@ -93,8 +93,8 @@ h1 {
 
 
 #logout-btn {
-    top: 10px;           /* 10px from the top of the body */
-    right: 10px;         /* 10px from the right of the body */
+    top: 10px;           
+    right: 10px;        
     position: absolute;
 }
 

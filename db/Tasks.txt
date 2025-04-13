@@ -4,7 +4,7 @@ db.serialize(() => {
       task_id INTEGER PRIMARY KEY AUTOINCREMENT,
       plan_id INTEGER,
       description TEXT NOT NULL,
-      deadline TEXT, -- Format: YYYY-MM-DD
+      deadline TEXT,
       priority TEXT CHECK(priority IN ('weak', 'average', 'strong')),
       CS_comments TEXT,
       CTO_comments TEXT,
@@ -14,7 +14,7 @@ db.serialize(() => {
     if (err) {
       console.error('Error creating tasks table:', err.message);
     } else {
-      console.log('✅ tasks table created or already exists');
+      console.log('tasks table created or already exists');
     }
   });
 });

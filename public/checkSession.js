@@ -16,4 +16,3 @@ window.onload = function() {
         console.error('Error:', error);
     });
   };
-

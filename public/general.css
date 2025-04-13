@@ -61,7 +61,7 @@ img:hover {
 
 
 button {
-    top: 10px;           /* 10px from the top of the body */
-    right: 10px;         /* 10px from the right of the body */
+    top: 10px;           
+    right: 10px;         
     position: absolute;
 }

@@ -1,5 +1,4 @@
 db.serialize(() => {
-  // Create the employees table
   db.run(`
     CREATE TABLE IF NOT EXISTS employees (
       employee_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +10,6 @@ db.serialize(() => {
     )
   `);
 
-  // Insert employees data
   const insertStmt = `
     INSERT INTO employees (status, first_name, last_name, email, hired_date)
     VALUES

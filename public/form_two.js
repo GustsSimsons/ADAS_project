@@ -54,9 +54,7 @@ document.getElementById("back-btn").addEventListener("click", () => {
 
 document.getElementById('send-petition-btn').addEventListener('click', function(event) {
 
-
-  // Collect the data from the form inputs
-  const employee_id = document.getElementById('low1').value || null; // Allow empty fields to be null
+  const employee_id = document.getElementById('low1').value || null;
   const plan_id = document.getElementById('low2').value || null;
   const task_description = document.getElementById('low3').value || null;
   const task_priority = document.getElementById('low4').value || null;
@@ -64,20 +62,17 @@ document.getElementById('send-petition-btn').addEventListener('click', function(
   const CS_comments = document.getElementById('mid1').value || null;
   const CTO_comments = document.getElementById('high1').value || null;
 
-  // Check if required fields are filled
   if (!employee_id || !plan_id || !task_description || !task_deadline || !task_priority) {
     alert('Employee ID, Plan ID, Task Description, Task Deadline, and Task Priority are required.');
     return;
   }
 
-  // Check if the priority is valid
   const validPriorities = ['weak', 'average', 'strong'];
   if (!validPriorities.includes(task_priority)) {
     alert('Task Priority must be one of: weak, average, or strong.');
     return;
   }
 
-  // Create an object to send as the request body
   const petitionData = {
     employee_id,
     plan_id,
@@ -88,7 +83,7 @@ document.getElementById('send-petition-btn').addEventListener('click', function(
     CTO_comments
   };
 
-  // Send a POST request to the server to insert the petition into the database
+
   fetch('/api/send-petition', {
     method: 'POST',
     headers: {
@@ -100,7 +95,6 @@ document.getElementById('send-petition-btn').addEventListener('click', function(
   .then(data => {
     if (data.success) {
       alert('Petition submitted successfully');
-      // You can redirect or clear the form here if you want
     } else {
       alert('Error: ' + data.message);
     }
@@ -112,9 +106,8 @@ document.getElementById('send-petition-btn').addEventListener('click', function(
 });
 
 
-// Function to populate the form with petition data
+
 function populateForm(petition) {
-  // Set the form fields with the petition data
   document.getElementById('low1').value = petition.employee_id || '';
   document.getElementById('low2').value = petition.plan_id || '';
   document.getElementById('low3').value = petition.task_description || '';
@@ -125,7 +118,6 @@ function populateForm(petition) {
   document.getElementById('petition-id').value = petition.petition_id || '';
 }
 
-// Function to handle the "Get Petition" button click
 document.getElementById('get-petition-btn').addEventListener('click', function() {
   fetch('/api/get-petition')
     .then(response => response.json())
@@ -144,12 +136,10 @@ document.getElementById('get-petition-btn').addEventListener('click', function()
 });
 
 
-// Function to handle the "Approve Task" button click
 document.getElementById('approve-task-btn').addEventListener('click', function() {
   const petitionId = document.getElementById("petition-id").value;
   console.log(petitionId);
 
-  // Ensure the petitionId is available
   if (!petitionId) {
     alert('No petition to approve');
     return;
